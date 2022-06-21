@@ -8,33 +8,60 @@
 jobs = {'Programming': 22.00, "Cleaning": 18.90, "Doing Nothing But Encourage": 10.00}
 worker1 = {'First name': 'Ross', 'Last name': 'Zhong', 'Job1': 'Programming', "Job1_hours": 8.00, "Job2": "Cleaning",
            "Job2_hours": 1.00, "Work day per week": 6}
-worker2 = {"First name": "Pine", "Last name": "Apple", 'Job1': "Doing Nothing But Encourage", "Job1_hours": 8.00,
-           "Work day per week": 7}
-workers = {'Worker1': worker1, "Worker2": worker2, }
+worker2 = {}
+worker3 = {}
+worker4 = {}
+worker5 = {}
+worker6 = {}
+worker7 = {}
+worker8 = {}
+worker9 = {}
+worker10 = {}
+workers = {'Worker1': worker1, "Worker2": worker2, "Worker3": worker3, "Worker4": worker4, "Worker5": worker5,
+           "Worker6": worker6, "Worker7": worker7, "Worker8": worker8, "Worker9": worker9, "Worker10": worker10}
 
 
 #Define a function that add jobs and the salary for the job.
 def adding_jobs():
-    job_adding = input("Enter the job type you want to add").title().strip()
-    while True:
-        try:
-            salary_adding = float(input('Please enter the hourly salary of "{}"'.format(job_adding)))
-            new_job_adding = {job_adding: salary_adding}
-            jobs.update(new_job_adding)
-            print(jobs)
-            break
-        except ValueError:
-            print("Please enter a number")
-            keep = input("Do you want to keep adding the job?").strip().lower()
-            if keep == "yes" or keep == "y":
-                change_job = input("Do you want to change the job you want to add?").strip().lower
-                if change_job == 'yes' or change_job == "y":
-                    job_adding = input('Enter the job you want to add')
-                else:
-                    print("Roger that")
-            else:
+    for job, salary in jobs.items():
+        print("{}, \n{}$ per hour\n".format(job, salary))
+    job_adding = input("Enter the job type you want to add, or enter no to exit").title().strip()
+    if job_adding != "No" and job_adding != "N":
+        while True:
+            try:
+                salary_adding = float(input('Please enter the hourly salary of "{}"'.format(job_adding)))
+                new_job_adding = {job_adding: salary_adding}
+                jobs.update(new_job_adding)
+                print(jobs)
                 break
+            except ValueError:
+                print("Please enter a number")
+                keep = input("Do you want to keep adding the job?").strip().lower()
+                if keep == "yes" or keep == "y":
+                    change_job = input("Do you want to change the job you want to add?").strip().lower
+                    if change_job == 'yes' or change_job == "y":
+                        job_adding = input('Enter the job you want to add')
+                    else:
+                        pass
+                else:
+                    break
+    else:
+        print("")
 
+def deleting_jobs():
+    while True:
+        for job, salary in jobs.items():
+            print("{}, \n${} per hour\n".format(job, salary))
+        job_deleting = input("What job you wanna delete").title()
+        if job_deleting in jobs.keys():
+            jobs.pop(job_deleting)
+        else:
+            print("Sorry,that's not in the job list")
+        keep = input("Do you want to keep deleting? Enter yes or no").title().strip()
+        if keep == "Yes" or keep == "Y":
+            pass
+        else:
+            break
 
 #Define a function that view the workers details. (finished)
 def viewing_workers():
@@ -55,7 +82,10 @@ Enter 1 or 2, or enter exit to return""").strip().lower()
 def workers_detail():
     while True:
         for worker, worker_detail in workers.items():
-            print(worker, worker_detail["First name"], worker_detail["Last name"])
+            if "First name" in worker_detail.keys() and "Last name" in worker_detail.keys():
+                print(worker, worker_detail["First name"], worker_detail["Last name"])
+            else:
+                pass
         choose = input("Who do you wanna look up? Enter the worker and his number or enter No or N to return.").capitalize().strip()
         if choose in workers.keys():
             print(workers[choose])
@@ -88,10 +118,58 @@ def worker_detail_change(detail):
             while True:
                 detail_change = input("Enter new jobs").capitalize()
                 if detail_change not in jobs:
-                    print()
+                    addtolist = input("{detail_change} is not in the list. "
+                                      "Would you like to add it to jobs list? Enter yes").strip().title()
+                    if addtolist == "Yes" or addtolist == "Y":
+                        while True:
+                            print("You are adding job: ", detail_change)
+                            try:
+                                salary = int(input("Please enter the salary for it, or enter '0' to exit"))
+                                if salary == 0:
+                                    break
+                                else:
+                                    jobs[detail_change] = salary
+                                    break
+                            except ValueError:
+                                print("That's not a number")
+                        add = input("Would you like to add the job to the member's detail?").strip().title()
+                        if add =="Yes" or add == "Y":
+                            if "Job1" not in detail.keys():
+                                new_time = input("Enter the job time")
+                                new_job = {"Job1": detail_change, "Job1_hours": new_time}
+                                detail.update(new_job)
+                            elif "Job2" not in detail.keys():
+                                new_time = input("Enter the job time")
+                                new_job = {"Job2": detail_change, "Job2_hours": new_time}
+                                detail.update(new_job)
+                            elif "Job3" not in detail.keys():
+                                new_time = input("Enter the job time")
+                                new_job = {"Job3": detail_change, "Job3_hours": new_time}
+                                detail.update(new_job)
+                            else:
+                                job_delete = input(
+                                    "Each worker can only have maximum of three jobs. Please enter a job1,"
+                                    "job2 or job3 to delete the current job").capitalize().strip()
+                                if job_delete == "Job1":
+                                    del detail["Job1"]
+                                    print("You have deleted Job1, please enter new job")
+                                if job_delete == "Job2":
+                                    del detail["Job2"]
+                                    print("You have deleted Job2, please enter new job")
+                                if job_delete == "Job3":
+                                    del detail["Job3"]
+                                    print("You have deleted Job3, please enter new job")
+                                continue
+
+                        keep = input("Would you like to keep changing? yes, y to continue").lower().strip()
+                        if keep == "yes" or keep == "y":
+                            pass
+                        else:
+                            break
+                else:
                     if "Job1" not in detail.keys():
                         new_time = input("Enter the job time")
-                        new_job = {"Job3": detail_change, "Job3_hours": new_time}
+                        new_job = {"Job1": detail_change, "Job1_hours": new_time}
                         detail.update(new_job)
                     elif "Job2" not in detail.keys():
                         new_time = input("Enter the job time")
@@ -184,8 +262,47 @@ def worker_detail_change(detail):
         else:
             break
 
+#def a function adding workers
+def adding_worker():
+    while True:
+        new_worker = input("Please enter new worker's First name, or enter no to exit").title().strip()
+        if new_worker != "No" and new_worker != "N":
+            for worker in workers.values():
+                if len(worker) == 0:
+                    add = {"First name": new_worker, "Last name": "", "Job1": "", "Job1_hours": 0, "Work day per week": 0}
+                    worker.update(add)
+                    lastname = input("Please enter new worker's last name?").title().strip()
+                    worker["Last name"] = lastname
+                    change = input("Would you like to change the new worker's detail? Enter yes to keep").strip().title()
+                    if change == "Yes" or change == "Y":
+                        worker_detail_change(worker)
+                        break
+                    else:
+                        break
+                else:
+                    pass
+        break
 
 
+def deleting_workers():
+    while True:
+        for num, worker in workers.items():
+            if "First name" in worker.keys() and "Last name" in worker.keys():
+                print(num, worker["First name"], worker["Last name"])
+        deleted_worker = input("Please enter the worker's LAST name to delete, or enter No to exit").strip().title()
+        for worker in workers.values():
+            if deleted_worker in worker.values():
+                list = []
+                for keys, values in worker.keys():
+                    list.append(keys)
+                for keys in list():
+                    if keys in worker.keys():
+                        del worker[keys]
+        keep = input("Would you like to keep deleting? Enter Yes to keep").strip().title()
+        if keep == "Yes" or keep == "Y":
+            pass
+        else:
+            break
 
 #define a function that shows the salary of workers inside the function viewing_workers().(finished)
 def workers_salary():
@@ -229,14 +346,30 @@ def workers_salary():
 
 def menu():
     choose = int(input("Enter 1 to add jobs \n"
-                       "Enter 2 to view workers details \n"
+                       "Enter 2 to deleting jobs \n"
+                       "Enter 3 to view workers details \n"
+                       "Enter 4 to add workers\n"
+                       "Enter 5 to delete workers\n"
                        "Enter 0 to exit "))
     while True:
         try:
             if choose == 1 :
                 adding_jobs()
-            elif choose == 2:
+                menu()
+            elif choose == 3:
                 viewing_workers()
+                menu()
+            elif choose == 2:
+                deleting_jobs()
+                menu()
+            elif choose == 0:
+                break
+            elif choose == 4:
+                adding_worker()
+                menu()
+            elif choose == 5:
+                deleting_workers()
+                menu()
             else:
                 print("please enter a number")
         except ValueError:
