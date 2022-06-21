@@ -5,7 +5,7 @@
 
 
 #Creating the first worker
-jobs = {'Programming': 22.00, "Cleaning": 18.90, "Doing Nothing But Encourage": 10.00}
+jobs = {'Programming': 22.00, "Cleaning": 18.90, "Doing Nothing": 1.00}
 worker1 = {'First name': 'Ross', 'Last name': 'Zhong', 'Job1': 'Programming', "Job1_hours": 8.00, "Job2": "Cleaning",
            "Job2_hours": 1.00, "Work day per week": 6}
 worker2 = {}
@@ -118,8 +118,8 @@ def worker_detail_change(detail):
             while True:
                 detail_change = input("Enter new jobs").capitalize()
                 if detail_change not in jobs:
-                    addtolist = input("{detail_change} is not in the list. "
-                                      "Would you like to add it to jobs list? Enter yes").strip().title()
+                    addtolist = input("{} is not in the list. "
+                                      "Would you like to add it to jobs list? Enter yes".format(detail_change)).strip().title()
                     if addtolist == "Yes" or addtolist == "Y":
                         while True:
                             print("You are adding job: ", detail_change)
@@ -244,7 +244,7 @@ def worker_detail_change(detail):
                     pass
                 else:
                     break
-        elif change == "Workdayperweek":
+        elif change == "Work day per week":
             while True:
                 try:
                     while True:
@@ -257,8 +257,6 @@ def worker_detail_change(detail):
                     break
                 except ValueError:
                     print("Please enter a whole number")
-
-
         else:
             break
 
@@ -291,13 +289,18 @@ def deleting_workers():
                 print(num, worker["First name"], worker["Last name"])
         deleted_worker = input("Please enter the worker's LAST name to delete, or enter No to exit").strip().title()
         for worker in workers.values():
-            if deleted_worker in worker.values():
-                list = []
-                for keys, values in worker.keys():
-                    list.append(keys)
-                for keys in list():
-                    if keys in worker.keys():
-                        del worker[keys]
+            try:
+                if deleted_worker == worker["Last name"]:
+                    list = []
+                    for keys, values in worker.items():
+                        list.append(keys)
+                    for keys in list:
+                        if keys in worker.keys():
+                            del worker[keys]
+                else:
+                    pass
+            except KeyError:
+                pass
         keep = input("Would you like to keep deleting? Enter Yes to keep").strip().title()
         if keep == "Yes" or keep == "Y":
             pass
@@ -308,68 +311,69 @@ def deleting_workers():
 def workers_salary():
     daily_total_paid = 0.00
     weekly_total_paid = 0.00
+    weekly_salary = 0.00
+    daily_salary = 0.00
+    job1_daily_salary = 0.00
+    job2_daily_salary = 0.00
+    job3_daily_salary = 0.00
     for worker, worker_detail in workers.items():
-        weekly_salary = 0.00
-        daily_salary = 0.00
-        job1_daily_salary = 0.00
-        job2_daily_salary = 0.00
-        job3_daily_salary = 0.00
-        job1 = worker_detail["Job1"]
-        job1_charges = jobs[job1]
-        job1_time = worker_detail["Job1_hours"]
-        job1_daily_salary = job1_charges * job1_time
-        daily_salary += job1_daily_salary
-        try:
+        if "Job1" in worker_detail:
+            job1 = worker_detail['Job1']
+            job1_charges = jobs[job1]
+            job1_time = worker_detail["Job1_hours"]
+            job1_daily_salary = job1_charges * job1_time
+            daily_salary += job1_daily_salary
+        else:
+            pass
+        if "Job2" in worker_detail:
             job2 = worker_detail["Job2"]
             job2_charges = jobs[job2]
             job2_time = worker_detail["Job2_hours"]
             job2_daily_salary = job2_charges * job2_time
             daily_salary += job2_daily_salary
-        except KeyError:
+        else:
             pass
-        try:
+        if "Job3" in worker_detail:
             job3 = worker_detail["Job3"]
             job3_charges = jobs[job3]
             job3_time = worker_detail["Job3_hours"]
             job3_daily_salary = job3_charges * job3_time
             daily_salary += job3_daily_salary
-        except KeyError:
+        else:
             pass
-        weekly_salary = daily_salary * worker_detail["Work day per week"]
-        print(worker, worker_detail["First name"], worker_detail["Last name"], "Daily salary: {:.2f}$"
-              .format(daily_salary), "Weekly salary: {:.2f}$".format(weekly_salary))
-        daily_total_paid += daily_salary
-        weekly_total_paid += weekly_salary
+        if "Work day per week" in worker_detail:
+            weekly_salary = daily_salary * worker_detail["Work day per week"]
+            print(worker, worker_detail["First name"], worker_detail["Last name"], "Daily salary: {:.2f}$"
+                  .format(daily_salary), "Weekly salary: {:.2f}$\n".format(weekly_salary))
+        else:
+            pass
+    daily_total_paid += daily_salary
+    weekly_total_paid += weekly_salary
     print("Daily total paid is {:.2f}$\nWeekly total paid is {:.2f}$".format(daily_total_paid, weekly_total_paid))
 
 
 
 def menu():
-    choose = int(input("Enter 1 to add jobs \n"
-                       "Enter 2 to deleting jobs \n"
-                       "Enter 3 to view workers details \n"
-                       "Enter 4 to add workers\n"
-                       "Enter 5 to delete workers\n"
-                       "Enter 0 to exit "))
     while True:
         try:
+            choose = int(input("Enter 1 to add jobs \n"
+                               "Enter 2 to deleting jobs \n"
+                               "Enter 3 to view workers details \n"
+                               "Enter 4 to add workers\n"
+                               "Enter 5 to delete workers\n"
+                               "Enter 0 to exit "))
             if choose == 1 :
                 adding_jobs()
-                menu()
             elif choose == 3:
                 viewing_workers()
-                menu()
             elif choose == 2:
                 deleting_jobs()
-                menu()
             elif choose == 0:
                 break
             elif choose == 4:
                 adding_worker()
-                menu()
             elif choose == 5:
                 deleting_workers()
-                menu()
             else:
                 print("please enter a number")
         except ValueError:
